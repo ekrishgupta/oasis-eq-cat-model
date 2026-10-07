@@ -1,0 +1,9 @@
+event_id,usgs_id,source,magnitude,name,year,band_lower,band_upper,annual_rate,return_period_years
+1,ci731691,event,5.9,Whittier Narrows,1987.0,5.75,6.15,0.089182,11.213081
+2,ci3359741,event,6.4,Long Beach,1933.0,6.15,6.5,0.03715,26.918004
+3,ci3347678,event,6.6,San Fernando,1971.0,6.5,6.65,0.009548,104.738151
+4,ci3144585,event,6.7,Northridge,1994.0,6.65,6.75,0.0043,232.550607
+5,adhocshakeout2_aftershock_se,scenario,6.8,Raymond-Hollywood fault (scenario),,6.75,6.95,0.005714,175.004097
+6,ci38457511,event,7.1,Ridgecrest,2019.0,6.95,7.3,0.006016,166.227634
+7,ci3319401,event,7.5,Kern County,1952.0,7.3,7.6,0.004891,204.47551
+8,adhocshakeout2_mainshock_se,scenario,7.7,Southern San Andreas ShakeOut (scenario),,7.6,inf,0.006682,149.666129
