@@ -66,7 +66,7 @@ cd ~
 python3 -m venv ~/oasis-venv
 source ~/oasis-venv/bin/activate
 pip install -q --upgrade pip
-pip install -q oasislmf          # Model Development Kit: Python + ktools/pytools binaries
+pip install -q "oasislmf[extra]~=2.5.0"  # MDK + geospatial extras (geopandas/shapely for the keys lookup)
 oasislmf --version
 [ -d OasisPiWind ] || git clone https://github.com/OasisLMF/OasisPiWind.git
 cd OasisPiWind
