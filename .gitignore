@@ -27,3 +27,6 @@ data/interim/
 .DS_Store
 .vscode/
 .idea/
+
+# Large regenerable model files
+model_data/footprint.csv
