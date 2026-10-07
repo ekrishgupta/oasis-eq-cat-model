@@ -8,8 +8,10 @@ echo "== 0. Machine check =="
 nproc; free -h; df -h /
 ROOT_FREE_GB=$(df --output=avail -BG / | tail -1 | tr -dc '0-9')
 if [ "$ROOT_FREE_GB" -lt 25 ]; then
-  echo "WARNING: only ${ROOT_FREE_GB}GB free on /. Oasis images are ~10GB and the LA exposure"
-  echo "         + ShakeMaps need more. Grow the EBS volume to 50GB+ before continuing."
+  echo "ERROR: only ${ROOT_FREE_GB}GB free on /. Oasis images are ~10GB and the LA exposure"
+  echo "       + ShakeMaps need more. In the EC2 console: Volumes -> root volume -> Modify -> 60 GiB,"
+  echo "       then: sudo growpart /dev/nvme0n1 1 && sudo resize2fs /dev/nvme0n1p1"
+  exit 1
 fi
 
 # 8 GB RAM is tight for the full stack (MySQL/Postgres, RabbitMQ, Redis, API, workers, UI).
@@ -36,20 +38,17 @@ https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_C
   sudo usermod -aG docker "$USER"
 fi
 sudo docker run --rm hello-world | head -3
-# Some older Oasis scripts call `docker-compose` (v1 syntax); shim it to the v2 plugin.
-if ! command -v docker-compose >/dev/null; then
-  printf '#!/bin/sh\nexec docker compose "$@"\n' | sudo tee /usr/local/bin/docker-compose >/dev/null
-  sudo chmod +x /usr/local/bin/docker-compose
-fi
 
 echo "== 2. Oasis platform via OasisEvaluation =="
 cd ~
 [ -d OasisEvaluation ] || git clone https://github.com/OasisLMF/OasisEvaluation.git
 cd OasisEvaluation
-# install.sh pulls the API server, worker and UI images, clones PiWind as the demo model,
-# starts everything with docker compose, and registers PiWind with the API.
-# `sg docker` runs it with the new docker group without needing to log out/in.
-sg docker -c "./install.sh"
+# install.sh pulls the API server, worker and UI images, clones PiWind as the demo model and
+# starts everything with docker compose; the PiWind worker registers itself with the API on start.
+# Passing the version skips its interactive prompt. `sg docker` picks up the new docker group
+# without logging out and back in.
+OASIS_VERSION=2.5
+sg docker -c "./install.sh $OASIS_VERSION"
 
 echo "== 3. Verify the stack =="
 sg docker -c "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'"
