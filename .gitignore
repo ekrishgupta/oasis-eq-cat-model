@@ -30,3 +30,4 @@ data/interim/
 
 # Large regenerable model files
 model_data/footprint.csv
+inputs/
