@@ -16,6 +16,7 @@ SERVICE = {
     "event": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid={}&format=geojson",
     "scenario": "https://earthquake.usgs.gov/fdsnws/scenario/1/query?eventid={}&format=geojson",
 }
+PRODUCT = {"event": "shakemap", "scenario": "shakemap-scenario"}
 
 
 def get_json(url: str) -> dict:
@@ -32,7 +33,7 @@ def main() -> None:
             continue
         detail = get_json(SERVICE[ev.source].format(ev.usgs_id))
         # The preferred (first) shakemap product is the authoritative version.
-        product = detail["properties"]["products"]["shakemap"][0]
+        product = detail["properties"]["products"][PRODUCT[ev.source]][0]
         url = product["contents"]["download/grid.xml"]["url"]
         out.parent.mkdir(parents=True, exist_ok=True)
         urllib.request.urlretrieve(url, out)
