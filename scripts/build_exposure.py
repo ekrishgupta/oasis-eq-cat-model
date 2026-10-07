@@ -67,8 +67,9 @@ def read_tiles(grid: dict, county: shapely.Geometry) -> gpd.GeoDataFrame:
         gdf = pyogrio.read_dataframe(f"/vsigzip/{path}", bbox=bbox)
         if gdf.empty:
             continue
-        c = gdf.geometry.centroid
-        gdf = gdf[shapely.contains_xy(county, c.x.to_numpy(), c.y.to_numpy())]
+        # Planar centroid in degrees: for a building-sized polygon the error is millimetres.
+        c = shapely.centroid(gdf.geometry.values)
+        gdf = gdf[shapely.contains_xy(county, shapely.get_x(c), shapely.get_y(c))]
         print(f"{path.name}: {len(gdf):,} buildings in LA County")
         parts.append(gdf[["height", "confidence", "geometry"]])
     return gpd.GeoDataFrame(pd.concat(parts, ignore_index=True), crs=4326)
@@ -90,8 +91,8 @@ def main() -> None:
     county = la_county(grid)
     b = read_tiles(grid, county)
 
-    centroids = b.geometry.centroid
-    b["lon"], b["lat"] = centroids.x.round(6), centroids.y.round(6)
+    centroids = shapely.centroid(b.geometry.values)
+    b["lon"], b["lat"] = shapely.get_x(centroids).round(6), shapely.get_y(centroids).round(6)
     b["footprint_sqft"] = b.geometry.to_crs(3310).area * FT2_PER_M2
     b = b[b["footprint_sqft"] >= MIN_FOOTPRINT_SQFT].reset_index(drop=True)
 
