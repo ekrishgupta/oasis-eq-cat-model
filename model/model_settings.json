@@ -1,0 +1,19 @@
+{
+  "version": "3",
+  "model_settings": {
+    "event_set": {
+      "name": "Event set",
+      "desc": "LA earthquake events",
+      "default": "p",
+      "options": [{"id": "p", "desc": "Eight historical and USGS scenario ShakeMaps, M5.9-7.7"}]
+    },
+    "event_occurrence_id": {
+      "name": "Occurrence set",
+      "desc": "Year-by-year event occurrences",
+      "default": "lt",
+      "options": [{"id": "lt", "desc": "100,000 Poisson years at UCERF3 LA-region band rates", "max_periods": 100000}]
+    }
+  },
+  "lookup_settings": {"supported_perils": [{"id": "QEQ", "desc": "Earthquake - shake only"}]},
+  "model_default_samples": 10
+}

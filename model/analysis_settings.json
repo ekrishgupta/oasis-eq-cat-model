@@ -1,0 +1,28 @@
+{
+  "model_supplier_id": "KrishGupta",
+  "model_name_id": "LAEQ",
+  "number_of_samples": 10,
+  "gul_threshold": 0,
+  "model_settings": {"event_set": "p", "event_occurrence_id": "lt"},
+  "gul_output": true,
+  "gul_summaries": [
+    {
+      "id": 1,
+      "eltcalc": true,
+      "aalcalc": true,
+      "lec_output": true,
+      "leccalc": {
+        "return_period_file": true,
+        "full_uncertainty_aep": true,
+        "full_uncertainty_oep": true,
+        "wheatsheaf_mean_aep": true,
+        "wheatsheaf_mean_oep": true
+      }
+    },
+    {
+      "id": 2,
+      "oed_fields": ["FlexiLocHazusClass"],
+      "eltcalc": true
+    }
+  ]
+}

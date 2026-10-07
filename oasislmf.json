@@ -1,0 +1,9 @@
+{
+  "lookup_config_json": "model/lookup_config.json",
+  "model_data_dir": "model_data",
+  "model_settings_json": "model/model_settings.json",
+  "analysis_settings_json": "model/analysis_settings.json",
+  "oed_location_csv": "inputs/oed_location_la.csv",
+  "gulmc": true,
+  "ktools_num_processes": 2
+}
