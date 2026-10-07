@@ -27,6 +27,9 @@ eve → getmodel → gulcalc → fmcalc → summarycalc → eltcalc / leccalc / 
 - `leccalc`: loss exceedance curves → EP curve, VaR, P(loss > $50B)
 - `aalcalc`: average annual loss
 
+In OasisLMF 2.5 most of these are Python reimplementations with new names: `gulmc` (ground-up loss),
+`fmpy` (financial module), `eltpy`, `lecpy`, `aalpy`. The pipeline is the same.
+
 ## Two layers
 
 - **MDK** (`pip install oasislmf`): a Python command line that runs ktools directly on files.
