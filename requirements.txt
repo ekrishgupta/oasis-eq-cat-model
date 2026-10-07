@@ -1,0 +1,5 @@
+numpy
+pandas
+scipy
+matplotlib
+simcenter-dlml   # SimCenter Damage & Loss Model Library: Hazus v6.1 fragility + repair-cost tables
