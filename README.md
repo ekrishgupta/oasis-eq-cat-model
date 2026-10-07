@@ -17,8 +17,8 @@ open-source [Oasis LMF](https://oasislmf.org) platform.
 
 | # | Step | Status | Code |
 |---|------|--------|------|
-| 1 | Docker + Oasis platform on EC2, PiWind end to end | Script written | [`scripts/step1_setup_oasis.sh`](scripts/step1_setup_oasis.sh) |
-| 2 | Vulnerability from Hazus fragility curves | — | |
+| 1 | Docker + Oasis platform on EC2 | Done (platform 2.5 running) | [`scripts/step1_setup_oasis.sh`](scripts/step1_setup_oasis.sh) |
+| 2 | Vulnerability from Hazus fragility curves | Done | [`docs/step2_vulnerability.md`](docs/step2_vulnerability.md) |
 | 3 | Hazard: USGS ShakeMaps → Oasis footprints | — | |
 | 4 | Exposure: Microsoft footprints (LA County) → OED location file | — | |
 | 5 | Run scenarios, attach annual rates → EP / VaR | — | |
