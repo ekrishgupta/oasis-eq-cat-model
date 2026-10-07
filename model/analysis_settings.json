@@ -8,21 +8,21 @@
   "gul_summaries": [
     {
       "id": 1,
-      "eltcalc": true,
-      "aalcalc": true,
-      "lec_output": true,
-      "leccalc": {
-        "return_period_file": true,
-        "full_uncertainty_aep": true,
-        "full_uncertainty_oep": true,
-        "wheatsheaf_mean_aep": true,
-        "wheatsheaf_mean_oep": true
+      "ord_output": {
+        "elt_moment": true,
+        "elt_sample": true,
+        "alt_period": true,
+        "ept_full_uncertainty_aep": true,
+        "ept_full_uncertainty_oep": true,
+        "ept_mean_sample_aep": true,
+        "ept_mean_sample_oep": true,
+        "return_period_file": true
       }
     },
     {
       "id": 2,
       "oed_fields": ["FlexiLocHazusClass"],
-      "eltcalc": true
+      "ord_output": {"elt_moment": true}
     }
   ]
 }
