@@ -1,0 +1,9 @@
+event_id,usgs_id,source,magnitude,name,year
+1,ci731691,event,5.9,Whittier Narrows,1987
+2,ci3359741,event,6.4,Long Beach,1933
+3,ci3347678,event,6.6,San Fernando,1971
+4,ci3144585,event,6.7,Northridge,1994
+5,adhocshakeout2_aftershock_se,scenario,6.8,Raymond-Hollywood fault (scenario),
+6,ci38457511,event,7.1,Ridgecrest,2019
+7,ci3319401,event,7.5,Kern County,1952
+8,adhocshakeout2_mainshock_se,scenario,7.7,Southern San Andreas ShakeOut (scenario),
