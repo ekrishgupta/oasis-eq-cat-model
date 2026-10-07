@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+oasis-venv/
+.ipynb_checkpoints/
+
+# Oasis run outputs (regenerable)
+runs/
+
+# Large raw/derived data: download or rebuild with the scripts, don't commit
+data/raw/
+data/interim/
+*.geojson
+*.geojsonl
+*.parquet
+*.zip
+*.gz
+*.bin
+
+# Secrets / machine-specific
+*.pem
+.env
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
