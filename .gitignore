@@ -29,7 +29,5 @@ data/interim/
 .idea/
 
 # Large regenerable model files
-model_data/footprint.csv
 inputs/
 model_data/footprint.idx
-model_data/vulnerability.csv
