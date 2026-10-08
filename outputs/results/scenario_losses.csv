@@ -1,0 +1,9 @@
+event_id,name,magnitude,annual_rate,return_period_years,mean_loss_usd_bn,sd_loss_usd_bn,loss_pct_of_tiv
+1,Whittier Narrows,5.9,0.0892,11.2131,45.4943,0.4571,1.3542
+2,Long Beach,6.4,0.0372,26.918,58.578,0.7859,1.7437
+3,San Fernando,6.6,0.0095,104.7382,78.7302,0.5426,2.3435
+4,Northridge,6.7,0.0043,232.5506,157.5926,1.1746,4.691
+5,Raymond-Hollywood fault (scenario),6.8,0.0057,175.0041,186.4559,0.8254,5.5501
+6,Ridgecrest,7.1,0.006,166.2276,0.35,0.0359,0.0104
+7,Kern County,7.5,0.0049,204.4755,6.5077,0.1722,0.1937
+8,Southern San Andreas ShakeOut (scenario),7.7,0.0067,149.6661,79.8691,1.0748,2.3774
