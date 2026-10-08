@@ -34,6 +34,15 @@ Ground-up building loss, 2.42M LA County buildings, $3.35T replacement value. Se
 | 4 | Exposure: Microsoft footprints (LA County) → OED location file | Done | [`docs/step4_exposure.md`](docs/step4_exposure.md) |
 | 5 | Run scenarios, attach UCERF3 rates → EP / VaR | Done | [`docs/step5_results.md`](docs/step5_results.md) |
 
+## Data
+
+| Data | Where |
+|---|---|
+| Code, docs, charts, result tables | This repo |
+| Oasis model files (vulnerability, footprint, events, occurrence) | `model_data/` in this repo |
+| OED exposure (2.42M buildings) and per-building table | [Release v1.0](https://github.com/ekrishgupta/oasis-eq-cat-model/releases/tag/v1.0) assets (too large for git) |
+| Raw ShakeMaps, Microsoft footprint tiles, Census boundary | Third-party; re-downloaded by `scripts/fetch_shakemaps.py` and `scripts/fetch_buildings.py` |
+
 ## Layout
 
 ```
