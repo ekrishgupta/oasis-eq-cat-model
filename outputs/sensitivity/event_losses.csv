@@ -1,0 +1,9 @@
+,event,Baseline (our results),Replacement cost -25%,Replacement cost +25%,Newer stock (5/35/60% PC/MC/HC),Older stock (30/50/20% PC/MC/HC),Half of band events hit the city,Quarter of band events hit the city,All events moderate duration,All events long duration,Wood damping 10% (AEBM low end),"Steel 7%, concrete 10% (high end)",Bilinear capacity curve,Fragility beta x0.8,Fragility beta x1.2
+1,Whittier Narrows,45.62,34.22,57.03,41.27,50.35,45.62,45.62,45.62,48.92,53.54,41.95,43.62,29.64,69.33
+2,Long Beach,57.90,43.43,72.38,49.90,67.07,57.90,57.90,57.90,69.82,67.35,53.56,61.31,41.71,80.64
+3,San Fernando,78.43,58.82,98.04,66.93,91.46,78.43,78.43,78.43,94.10,92.29,73.40,83.45,56.73,108.57
+4,Northridge,157.47,118.10,196.84,132.53,184.28,157.47,157.47,157.47,192.62,179.02,150.13,168.52,124.04,200.69
+5,Raymond-Hollywood fault (scenario),186.87,140.15,233.59,160.57,215.97,186.87,186.87,186.87,229.16,210.63,177.99,196.83,146.34,237.96
+6,Ridgecrest,0.34,0.25,0.42,0.23,0.46,0.34,0.34,0.34,0.34,0.47,0.27,0.34,0.05,1.27
+7,Kern County,6.49,4.87,8.12,5.21,7.95,6.49,6.49,6.37,6.49,8.49,5.43,6.88,2.67,13.60
+8,Southern San Andreas ShakeOut (scenario),79.14,59.36,98.93,64.86,95.29,79.14,79.14,68.45,79.14,96.06,72.63,88.03,56.42,110.97

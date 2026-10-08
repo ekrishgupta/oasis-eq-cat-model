@@ -1,0 +1,15 @@
+case,group,aal_bn,var200_bn,p_gt_50bn
+Baseline (our results),baseline,9.2763,186.8694,0.0614
+Replacement cost -25%,Exposure value,6.9572,140.1521,0.0259
+Replacement cost +25%,Exposure value,11.5954,233.5868,0.1415
+Newer stock (5/35/60% PC/MC/HC),Design-level mix,8.1213,160.5730,0.0259
+Older stock (30/50/20% PC/MC/HC),Design-level mix,10.5607,215.9729,0.1415
+Half of band events hit the city,Rate attribution,4.6382,79.1427,0.0312
+Quarter of band events hit the city,Rate attribution,2.3191,78.4283,0.0157
+All events moderate duration,Shaking duration,9.2043,186.8694,0.0614
+All events long duration,Shaking duration,10.5551,229.1615,0.0614
+Wood damping 10% (AEBM low end),Elastic damping,10.8172,210.6343,0.1415
+"Steel 7%, concrete 10% (high end)",Elastic damping,8.6075,177.9942,0.0614
+Bilinear capacity curve,Capacity curve shape,9.4376,196.8265,0.0614
+Fragility beta x0.8,Fragility dispersion,6.4944,146.3373,0.0259
+Fragility beta x1.2,Fragility dispersion,13.2537,237.9632,0.1415
