@@ -6,6 +6,10 @@ open-source [Oasis LMF](https://oasislmf.org) platform.
 **Hazard** (USGS ShakeMaps) + **Vulnerability** (FEMA Hazus damage functions) + **Exposure**
 (Microsoft building footprints) → **Loss**
 
+> **Full report:** [docs/REPORT.md](docs/REPORT.md). It covers how every piece connects,
+> results, validation, sensitivity, conclusions, risks and uncertainties, pinned to the
+> 2026-10-08 run.
+
 ## Deliverables
 
 - Loss per historical scenario, one per magnitude band (M5.9 / 6.7 / 6.9 / 7.1 / 7.8)
