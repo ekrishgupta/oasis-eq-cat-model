@@ -1,9 +1,9 @@
-event_id,name,magnitude,max_pga_g,mean_pga_g,pct_cells_pga_gt_0.1g,pct_cells_pga_gt_0.3g,median_sigma
-1,Whittier Narrows,5.9,0.403,0.079,20.9,1.9,0.5
-2,Long Beach,6.4,0.645,0.084,20.2,5.7,0.49
-3,San Fernando,6.6,1.01,0.159,60.2,10.3,0.46
-4,Northridge,6.7,0.866,0.191,70.5,17.1,0.44
-5,Raymond-Hollywood fault (scenario),6.8,0.657,0.13,44.9,7.7,0.4
-6,Ridgecrest,7.1,0.056,0.022,0.0,0.0,0.45
-7,Kern County,7.5,0.254,0.064,14.5,0.0,0.6
-8,Southern San Andreas ShakeOut (scenario),7.7,0.682,0.21,82.6,20.8,0.39
+event_id,name,magnitude,duration,max_pga_g,mean_pga_g,max_sa03_g,max_sa10_g,pct_cells_pga_gt_0.1g,pct_cells_pga_gt_0.3g
+1,Whittier Narrows,5.9,moderate,0.403,0.079,0.705,0.292,20.9,1.9
+2,Long Beach,6.4,moderate,0.645,0.084,1.147,0.66,20.2,5.7
+3,San Fernando,6.6,moderate,1.01,0.159,1.94,1.172,60.2,10.3
+4,Northridge,6.7,moderate,0.866,0.191,1.687,1.223,70.5,17.1
+5,Raymond-Hollywood fault (scenario),6.8,moderate,0.657,0.13,1.578,0.856,44.9,7.7
+6,Ridgecrest,7.1,moderate,0.056,0.022,0.122,0.083,0.0,0.0
+7,Kern County,7.5,long,0.254,0.064,0.591,0.291,14.5,0.0
+8,Southern San Andreas ShakeOut (scenario),7.7,long,0.682,0.21,1.596,0.825,82.6,20.8
