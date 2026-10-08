@@ -13,15 +13,26 @@ open-source [Oasis LMF](https://oasislmf.org) platform.
 - VaR at 1-in-100, 1-in-200 and 1-in-250 years
 - P(annual loss > $50B in LA)
 
+## Results
+
+![Results](outputs/results/results.png)
+
+| AAL | VaR 1-in-100 | VaR 1-in-200 | VaR 1-in-250 | P(> $50B event in a year) |
+|---|---|---|---|---|
+| $9.3B | $155B | $185B | $186B | 6.1% (about 1-in-16) |
+
+Ground-up building loss, 2.42M LA County buildings, $3.35T replacement value. See
+[docs/step5_results.md](docs/step5_results.md) for validation and limitations.
+
 ## Steps
 
 | # | Step | Status | Code |
 |---|------|--------|------|
 | 1 | Docker + Oasis platform on EC2 | Done (platform 2.5 running) | [`scripts/step1_setup_oasis.sh`](scripts/step1_setup_oasis.sh) |
-| 2 | Vulnerability from Hazus fragility curves | Done | [`docs/step2_vulnerability.md`](docs/step2_vulnerability.md) |
+| 2 | Vulnerability: Hazus capacity spectrum method | Done | [`docs/step2_vulnerability.md`](docs/step2_vulnerability.md) |
 | 3 | Hazard: USGS ShakeMaps → Oasis footprints | Done | [`docs/step3_hazard.md`](docs/step3_hazard.md) |
 | 4 | Exposure: Microsoft footprints (LA County) → OED location file | Done | [`docs/step4_exposure.md`](docs/step4_exposure.md) |
-| 5 | Run scenarios, attach annual rates → EP / VaR | — | |
+| 5 | Run scenarios, attach UCERF3 rates → EP / VaR | Done | [`docs/step5_results.md`](docs/step5_results.md) |
 
 ## Layout
 
