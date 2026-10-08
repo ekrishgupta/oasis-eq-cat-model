@@ -41,34 +41,25 @@ seismic stations and larger far from them, typically σ ≈ 0.4–0.6.
 1. **Model grid.** A regular 0.01° grid (about 1 km) over mainland LA County, giving
    14,690 cells. Each cell is one Oasis `areaperil_id` (`model_data/areaperil_grid.json`).
    In Step 4, every building is assigned the cell it sits in.
-2. **Interpolate.** Bilinear interpolation of median PGA and σ to each cell centre.
-3. **Discretise the uncertainty.** An Oasis footprint is not a single number per cell; it
-   is a probability distribution over intensity bins. For each cell:
+2. **Interpolate.** Bilinear interpolation of the median **SA(0.3 s)** and **SA(1.0 s)**
+   to each cell centre. PGA is kept for maps only.
+3. **Add duration.** The event's magnitude sets its Hazus duration class (M ≤ 5.5 short,
+   M ≥ 7.5 long, otherwise moderate).
+4. **One bin per cell.** (SA 0.3 s, SA 1.0 s, duration) maps to one of the 7,500
+   capacity-spectrum intensity bins with probability 1. That gives 117,520 footprint rows.
 
-   P(bin i) = Φ((ln to_i − ln median) / σ) − Φ((ln from_i − ln median) / σ)
-
-   This is the lognormal ground-motion distribution, laid on the same 201 PGA bins as
-   the vulnerability functions. Oasis then samples both the intensity and the damage.
-4. **Trim.** Cells with median PGA below 0.01 g are dropped (no damage is possible), and
-   bin probabilities below 10⁻⁵ are removed, with the rest renormalised to sum to 1.
-
-The result is `model_data/footprint.csv`: 6.8 million rows (event, cell, PGA bin,
-probability), about 150 MB. It is rebuilt rather than committed.
-
-## Why include the uncertainty
-
-The loss curve is convex in PGA: damage accelerates as shaking rises. So the average loss
-over the distribution of PGA is higher than the loss at the median PGA. Ignoring
-ground-motion uncertainty would systematically understate loss.
+**Why no extra ground-motion uncertainty.** The Hazus fragility dispersions (β ≈ 0.6–1.0)
+already include variability in the demand spectrum, and Hazus itself runs ShakeMaps at
+their median values. An earlier version (v1, PGA) spread each cell over a lognormal PGA
+distribution using ShakeMap's `uncertainty.xml`. Doing that on top of Hazus β would count
+the same uncertainty twice.
 
 ## Simplifications to state when presenting
 
-- Cell-to-cell uncertainty is sampled independently. Real ground-motion errors are
-  spatially correlated, so this understates the spread of the portfolio loss around its
-  mean. The mean itself is unaffected.
+- Damage is sampled independently per building. Real ground-motion errors are spatially
+  correlated, so this understates the spread of the portfolio loss around its mean. The
+  mean itself is unaffected.
 - The 0.01° grid smooths sharp local effects such as basin edges and individual hillsides.
-- PGA only. Long-period shaking, which matters for tall buildings in a distant M7.7, is
-  not used.
 
 ## Reproduce (on EC2)
 
