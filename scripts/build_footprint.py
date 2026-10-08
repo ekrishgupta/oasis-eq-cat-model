@@ -3,29 +3,32 @@
 Model grid: a regular 0.01-degree (~1 km) lon/lat grid over LA County. Each cell is one Oasis
 areaperil_id = row * n_cols + col + 1, counted from the south-west corner.
 
-For each event and cell we take the ShakeMap median PGA (grid.xml, %g -> g) and its
-uncertainty sigma (uncertainty.xml STDPGA, ln units), interpolated to the cell centre. The
-footprint stores the probability that the cell's PGA falls in each intensity bin:
+Intensity follows the Hazus capacity spectrum method: for each event and cell we take the
+ShakeMap median 5%-damped spectral accelerations at 0.3 s and 1.0 s (grid.xml PSA03, PSA10,
+%g -> g), interpolated to the cell centre, plus the event's Hazus duration class (from its
+magnitude). That triple maps to one intensity bin of the vulnerability (probability 1).
+Ground-motion variability is not added here: the Hazus fragility dispersions already
+include demand-spectrum variability, and Hazus itself runs ShakeMaps at their median.
 
-    P(bin i) = Phi((ln to_i - ln median) / sigma) - Phi((ln from_i - ln median) / sigma)
-
-which is the lognormal ground-motion distribution discretised onto the same PGA bins the
-vulnerability functions use.
-
-Inputs:  data/events.csv, data/raw/shakemaps/<usgs_id>/{grid,uncertainty}.xml,
-         model_data/intensity_bin_dict.csv
+Inputs:  data/events.csv, data/raw/shakemaps/<usgs_id>/grid.xml
 Outputs: model_data/footprint.csv, model_data/areaperil_grid.json,
-         outputs/hazard/cell_median_pga.csv, outputs/hazard/event_summary.csv
+         outputs/hazard/cell_median_pga.csv, outputs/hazard/cell_median_sa.csv,
+         outputs/hazard/event_summary.csv
 """
 import io
 import json
 import re
 from pathlib import Path
 
+import sys
+
 import numpy as np
 import pandas as pd
 from scipy.interpolate import RegularGridInterpolator
-from scipy.stats import norm
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_vulnerability_csm import DURATIONS, SA03_EDGES, SA10_EDGES  # noqa: E402
+from hazus_csm import duration_class  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data/raw/shakemaps"
@@ -34,9 +37,6 @@ OUT = ROOT / "outputs/hazard"
 
 # LA County mainland bounding box (excludes Catalina and San Clemente islands).
 GRID = {"lon_min": -118.95, "lat_min": 33.70, "lon_max": -117.65, "lat_max": 34.83, "step": 0.01}
-MIN_MEDIAN_PGA_G = 0.01   # cells below this get no footprint rows (no damage possible)
-MIN_SIGMA = 0.05          # floor to avoid a degenerate distribution at recording stations
-MIN_PROB = 1e-5           # drop negligible bin probabilities, then renormalise
 
 
 def read_shakemap_xml(path: Path) -> tuple[pd.DataFrame, dict]:
@@ -72,60 +72,50 @@ def model_grid() -> tuple[pd.DataFrame, dict]:
                           "areaperil_id": "row * n_cols + col + 1, row/col from south-west"}
 
 
-def bin_probabilities(median: np.ndarray, sigma: np.ndarray, edges: np.ndarray) -> np.ndarray:
-    """Lognormal mass per intensity bin; edges has n_bins + 1 entries starting at 0."""
-    with np.errstate(divide="ignore"):
-        z = (np.log(edges)[None, :] - np.log(median)[:, None]) / sigma[:, None]
-    cdf = norm.cdf(z)
-    cdf[:, -1] = 1.0  # top bin is open-ended
-    return np.diff(cdf, axis=1)
+def spectral_bin(sa03: np.ndarray, sa10: np.ndarray, duration: str) -> np.ndarray:
+    """Intensity bin id for (SA(0.3 s), SA(1.0 s), duration); values outside the grid clamp."""
+    n03, n10 = len(SA03_EDGES) - 1, len(SA10_EDGES) - 1
+    i = np.clip(np.searchsorted(SA03_EDGES, sa03, side="right") - 1, 0, n03 - 1)
+    j = np.clip(np.searchsorted(SA10_EDGES, sa10, side="right") - 1, 0, n10 - 1)
+    return list(DURATIONS).index(duration) * n03 * n10 + i * n10 + j + 1
 
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     events = pd.read_csv(ROOT / "data/events.csv")
-    ibins = pd.read_csv(MODEL / "intensity_bin_dict.csv")
-    edges = np.append(ibins["bin_from"].to_numpy(), ibins["bin_to"].iloc[-1])
     cells, grid_meta = model_grid()
     pts = cells[["lat", "lon"]].to_numpy()
 
-    footprint, medians, summary = [], {}, []
+    footprint, pga, sa, summary = [], {}, {}, []
     for ev in events.itertuples():
         grid_df, spec = read_shakemap_xml(RAW / ev.usgs_id / "grid.xml")
-        unc_df, unc_spec = read_shakemap_xml(RAW / ev.usgs_id / "uncertainty.xml")
-        median = to_interpolator(grid_df, spec, "PGA")(pts) / 100.0  # %g -> g
-        sigma = to_interpolator(unc_df, unc_spec, "STDPGA")(pts)
-        if np.isnan(median).any():
+        med = {f: to_interpolator(grid_df, spec, f)(pts) / 100.0 for f in ("PGA", "PSA03", "PSA10")}
+        if any(np.isnan(v).any() for v in med.values()):
             raise ValueError(f"{ev.usgs_id}: ShakeMap does not cover the whole LA grid")
-        sigma = np.maximum(np.nan_to_num(sigma, nan=0.6), MIN_SIGMA)
-        medians[ev.event_id] = median
-
-        keep = median >= MIN_MEDIAN_PGA_G
-        probs = bin_probabilities(median[keep], sigma[keep], edges)
-        probs[probs < MIN_PROB] = 0.0
-        probs /= probs.sum(axis=1, keepdims=True)
-        cell_idx, bin_idx = np.nonzero(probs)
+        duration = duration_class(ev.magnitude)
+        pga[ev.event_id] = med["PGA"]
+        sa[f"sa03_event_{ev.event_id}"], sa[f"sa10_event_{ev.event_id}"] = med["PSA03"], med["PSA10"]
         footprint.append(pd.DataFrame({
             "event_id": ev.event_id,
-            "areaperil_id": cells["areaperil_id"].to_numpy()[keep][cell_idx],
-            "intensity_bin_id": ibins["bin_index"].to_numpy()[bin_idx],
-            "probability": probs[cell_idx, bin_idx],
+            "areaperil_id": cells["areaperil_id"].to_numpy(),
+            "intensity_bin_id": spectral_bin(med["PSA03"], med["PSA10"], duration),
+            "probability": 1.0,
         }))
         summary.append({
-            "event_id": ev.event_id, "name": ev.name, "magnitude": ev.magnitude,
-            "max_pga_g": median.max().round(3), "mean_pga_g": median.mean().round(3),
-            "pct_cells_pga_gt_0.1g": round(100 * (median > 0.1).mean(), 1),
-            "pct_cells_pga_gt_0.3g": round(100 * (median > 0.3).mean(), 1),
-            "median_sigma": round(float(np.median(sigma)), 2),
+            "event_id": ev.event_id, "name": ev.name, "magnitude": ev.magnitude, "duration": duration,
+            "max_pga_g": med["PGA"].max().round(3), "mean_pga_g": med["PGA"].mean().round(3),
+            "max_sa03_g": med["PSA03"].max().round(3), "max_sa10_g": med["PSA10"].max().round(3),
+            "pct_cells_pga_gt_0.1g": round(100 * (med["PGA"] > 0.1).mean(), 1),
+            "pct_cells_pga_gt_0.3g": round(100 * (med["PGA"] > 0.3).mean(), 1),
         })
-        print(f"event {ev.event_id} {ev.name}: max PGA {median.max():.2f} g, "
-              f"{keep.sum():,} cells, {len(footprint[-1]):,} rows")
+        print(f"event {ev.event_id} {ev.name}: {duration} duration, max SA(1.0s) {med['PSA10'].max():.2f} g")
 
-    fp = pd.concat(footprint).sort_values(["event_id", "areaperil_id", "intensity_bin_id"])
-    fp.to_csv(MODEL / "footprint.csv", index=False, float_format="%.6e")
+    fp = pd.concat(footprint).sort_values(["event_id", "areaperil_id"])
+    fp.to_csv(MODEL / "footprint.csv", index=False)
     (MODEL / "areaperil_grid.json").write_text(json.dumps(grid_meta, indent=2))
-    cells.assign(**{f"pga_event_{k}": v.round(4) for k, v in medians.items()}).to_csv(
+    cells.assign(**{f"pga_event_{k}": v.round(4) for k, v in pga.items()}).to_csv(
         OUT / "cell_median_pga.csv", index=False)
+    cells.assign(**{k: v.round(4) for k, v in sa.items()}).to_csv(OUT / "cell_median_sa.csv", index=False)
     pd.DataFrame(summary).to_csv(OUT / "event_summary.csv", index=False)
     print(pd.DataFrame(summary).to_string(index=False))
     print(f"footprint: {len(fp):,} rows over {grid_meta['n_rows'] * grid_meta['n_cols']:,} cells")
