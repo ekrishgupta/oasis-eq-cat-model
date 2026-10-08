@@ -22,7 +22,9 @@ open-source [Oasis LMF](https://oasislmf.org) platform.
 | $9.3B | $155B | $185B | $186B | 6.1% (about 1-in-16) |
 
 Ground-up building loss, 2.42M LA County buildings, $3.35T replacement value. See
-[docs/step5_results.md](docs/step5_results.md) for validation and limitations.
+[docs/step5_results.md](docs/step5_results.md) for validation, limitations, a
+[sensitivity analysis](outputs/sensitivity/tornado.png) and a comparison with published
+FEMA, vendor and USGS estimates.
 
 ## Steps
 
