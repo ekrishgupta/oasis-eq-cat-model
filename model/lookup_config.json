@@ -1,0 +1,5 @@
+{
+  "model": {"supplier_id": "KrishGupta", "model_id": "LAEQ", "model_version": "1"},
+  "lookup_module_path": "lookup.py",
+  "model_data_dir": "../model_data"
+}

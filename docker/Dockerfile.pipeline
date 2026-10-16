@@ -1,0 +1,17 @@
+# Model-build and analysis environment for the LA earthquake model.
+# Every data-prep, analysis and chart script runs in this image; the Oasis
+# calculation itself runs in the official coreoasis/model_worker image.
+FROM python:3.12-slim
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements.txt /tmp/requirements.txt
+# oasislmf pinned to the platform version so csvtobin output matches the workers.
+RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+      "oasislmf[extra]==2.5.8" pyogrio pyarrow
+
+# The repository is mounted at /app at run time (see scripts/docker_pipeline.sh).
+CMD ["bash"]

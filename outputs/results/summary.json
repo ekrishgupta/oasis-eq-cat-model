@@ -1,0 +1,19 @@
+{
+  "aal_usd_bn": 11.685,
+  "var_oep_usd_bn": {
+    "100": 81.9,
+    "200": 185.2,
+    "250": 186.0
+  },
+  "var_aep_usd_bn": {
+    "100": 155.4,
+    "200": 186.4,
+    "250": 187.2
+  },
+  "p_annual_event_loss_gt_50bn": {
+    "analytic": 0.0614,
+    "simulated": 0.061
+  },
+  "p_annual_total_loss_gt_50bn_simulated": 0.0727,
+  "return_period_of_50bn_event_years": 16.3
+}

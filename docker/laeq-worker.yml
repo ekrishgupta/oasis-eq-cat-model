@@ -1,0 +1,43 @@
+# Adds the LA earthquake model to the running Oasis platform (OasisEvaluation).
+# Usage, from the repo root on the EC2 host:
+#   LAEQ_REPO=$(pwd) docker compose -p oasisevaluation -f ~/OasisEvaluation/oasis-platform.yml \
+#     -f docker/laeq-worker.yml up -d laeq-worker
+# The worker mounts this repository as its model directory; it reads ./oasislmf.json
+# (model data, lookup, settings) and registers KrishGupta/LAEQ/1 with the API.
+services:
+  laeq-worker:
+    restart: always
+    image: coreoasis/model_worker:2.5
+    links:
+      - celery-db
+      - broker:mybroker
+    environment:
+      OASIS_DEBUG: 1
+      OASIS_URL_SUB_PATH: 0
+      OASIS_CELERY_BROKER_URL: "amqp://rabbit:rabbit@broker:5672"
+      OASIS_SERVER_DB_HOST: server-db
+      OASIS_SERVER_DB_PASS: oasis
+      OASIS_SERVER_DB_USER: oasis
+      OASIS_SERVER_DB_NAME: oasis
+      OASIS_SERVER_DB_PORT: 5432
+      OASIS_SERVER_CHANNEL_LAYER_HOST: channel-layer
+      OASIS_SERVER_DB_ENGINE: django.db.backends.postgresql
+      OASIS_CELERY_DB_ENGINE: db+postgresql
+      OASIS_CELERY_DB_HOST: celery-db
+      OASIS_CELERY_DB_PASS: password
+      OASIS_CELERY_DB_USER: celery
+      OASIS_CELERY_DB_NAME: celery
+      OASIS_CELERY_DB_PORT: 5432
+      OASIS_INPUT_GENERATION_CONTROLLER_QUEUE: task-controller
+      OASIS_LOSSES_GENERATION_CONTROLLER_QUEUE: task-controller
+      OASIS_WEBSOCKET_PORT: 8001
+      OASIS_WEBSOCKET_URL: ws://server-websocket
+      OASIS_MODEL_SUPPLIER_ID: KrishGupta
+      OASIS_MODEL_ID: LAEQ
+      OASIS_MODEL_VERSION_ID: "1"
+      OASIS_RUN_MODE: v2
+    volumes:
+      - ${LAEQ_REPO:?set LAEQ_REPO to this repository path}:/home/worker/model:ro
+      - filestore-OasisData:/shared-fs:rw
+    security_opt:
+      - label:disable

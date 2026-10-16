@@ -1,0 +1,14 @@
+{
+  "api_url": "http://localhost:8000/",
+  "model": {
+    "supplier_id": "KrishGupta",
+    "model_id": "LAEQ",
+    "version_id": "1"
+  },
+  "model_platform_id": 3,
+  "portfolio_id": 3,
+  "analysis_id": 3,
+  "input_generation_seconds": 396,
+  "loss_run_seconds": 605,
+  "completed_utc": "2026-10-15T17:19:05Z"
+}
